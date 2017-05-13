@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive demonstration of 3-SAT</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400&subset=latin,latin-ext" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="main">
+    <h1>Interactive demonstration of 3-SAT</h1>
+    <div class="right">
+      <a href="" onclick="return togglePopup();">Help</a>
+    </div>
+    <hr>
+    <div id="leftside">
+      <h2>Formula</h2>
+      <hr>
+      <div id="formula"></div>
+      <h2>Truth table</h2>
+      <div class="right">
+        <span id="satisfying-assignments"></span>
+      </div>
+      <hr>
+      <div id="truthtable"></div>
+    </div>
+    <div id="rightside">
+      <div id="clauses">
+        <h2>Clauses</h2>
+        <div class="right">
+          <label>
+            <input type="checkbox" id="toggleImpliedClauses"> Show implied clauses
+          </label>
+        </div>
+        <hr>
+        <div id="clauses3"></div>
+        <div id="clauses2"></div>
+        <div id="clauses1"></div>
+      </div>
+    </div>
+    <div id="popup" style="display: none;">
+      <div style="position: absolute; width: 600px;">
+        <h1>Help</h1>
+        <div class="right"><a href="" onclick="return togglePopup();">Close</a></div>
+        <hr>
+        <p>This tool demonstrates how the satisfiability of 3-CNF formulas changes as clauses are added and removed. </p>
+        <p>Manipulate the formula by clicking the cells under the Clauses section. The color of the cell changes to black when the corresponding clause is added and back to white when it is removed.</p>
+        <p>By default, clauses that are implied by the formula are also shown in grey. These implied clauses can be added to the formula but they will have no effect on its satisfiability.</p>
+        <p>The project is available at <a href="https://github.com/balazsdavid987/Interactive-demonstration-of-3-SAT" target="_blank">GitHub</a>. If you have an idea for a similiar demonstration of a computer science topic, please send an e-mail to <a href="mailto:balazsdavid987@gmail.com">balazsdavid987@gmail.com</a>.</p>
+      </div>
+    </div>
+  </div> 
+  <script src="script.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-99034542-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
