@@ -3,33 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <title>Interactive demonstration of 3-SAT</title>
+  <meta name="viewport" content="width=550, user-scalable=no">
   <link href="https://fonts.googleapis.com/css?family=Roboto:400&subset=latin,latin-ext" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="main">
-    <h1>Interactive demonstration of 3-SAT</h1>
-    <div class="right">
-      <a href="" onclick="return togglePopup();">Help</a>
+  <div id="container">
+    <div class="header" id="top">
+      <h1>Interactive demonstration of 3-SAT</h1>
+      <label>
+        <input type="checkbox" id="checkbox-Hints"> Show hints
+      </label>    
+      <select id="select-n" style="display: none;"></select>
+      <button id="btn-help">Help</button>
     </div>
-    <hr>
-    <div id="leftside">
-      <h2>Formula</h2>
+    <div id="help" style="display: none;">
+      <h2>Help</h2>
       <hr>
-      <div id="formula"></div>
-      <h2>Truth table</h2>
-      <div class="right">
-        <span id="satisfying-assignments"></span>
-      </div>
+      <p>This tool demonstrates how satisfiability changes as clauses are added and removed. </p>
+      <p>Manipulate the formula by clicking the cells under the Clauses section. The color of the cell changes to black when the corresponding clause is added and back to white when it is removed.</p>
+      <p>By default, clauses that are implied by the formula are indicated with a grey background. These implied clauses can be added to the formula but they will have no effect on its satisfiability.</p>
       <hr>
-      <div id="truthtable"></div>
     </div>
-    <div id="rightside">
+    <div id="main">
       <div id="clauses">
-        <h2>Clauses</h2>
-        <div class="right">
+        <div class="header">
+          <h2>Clauses</h2>
           <label>
-            <input type="checkbox" id="toggleImpliedClauses"> Show implied clauses
+            <input type="checkbox" id="checkbox-ImpliedClauses"> Show implied clauses
           </label>
         </div>
         <hr>
@@ -37,19 +38,20 @@
         <div id="clauses2"></div>
         <div id="clauses1"></div>
       </div>
-    </div>
-    <div id="popup" style="display: none;">
-      <div style="position: absolute; width: 600px;">
-        <h1>Help</h1>
-        <div class="right"><a href="" onclick="return togglePopup();">Close</a></div>
+      <div style="width: 510px;">
+        <div class="header">
+          <h2>Truth table</h2>
+          <span id="satisfying-assignments"></span>
+        </div>
         <hr>
-        <p>This tool demonstrates how the satisfiability of 3-CNF formulas changes as clauses are added and removed. </p>
-        <p>Manipulate the formula by clicking the cells under the Clauses section. The color of the cell changes to black when the corresponding clause is added and back to white when it is removed.</p>
-        <p>By default, clauses that are implied by the formula are also shown in grey. These implied clauses can be added to the formula but they will have no effect on its satisfiability.</p>
-        <p>The project is available at <a href="https://github.com/balazsdavid987/Interactive-demonstration-of-3-SAT" target="_blank">GitHub</a>. If you have an idea for a similiar demonstration of a computer science topic, please send an e-mail to <a href="mailto:balazsdavid987@gmail.com">balazsdavid987@gmail.com</a>.</p>
+        <div id="truthtable"></div>
+        <h2>Formula</h2>
+        <hr>
+        <div id="formula"></div>      
       </div>
     </div>
-  </div> 
+    <div id="hint"></div>  
+  </div>
   <script src="script.js"></script>
 
 <script>

@@ -1,29 +1,24 @@
-// Global variables
-var current = {};
-var letters = 'abcdefgh';
+var current = {
+  n: 5,
+  showImpliedClauses : true,
+  showHints: true
+};
+
+var letters = 'abcdefg';
+
 var colors = {
   white: '#FFFFFF',
   grey:  '#D7D7D7',
   black: '#1D1D1D'
 };
 
-// Initilization
+setUIElements();
 
-(function() {
-  // default values
-  // (although the layout supports only n = 5, the functions
-  // were written to work with any n)
-  current.n = 5;
+initialize();
 
-  current.showImpliedClauses =  true;
+// Main functions
 
-  // add event listener to #toggleImpliedClauses and set "checked" status
-  var element = document.getElementById('toggleImpliedClauses');
-  element.addEventListener('click', toggleImpliedClauses);
-  if(current.showImpliedClauses) {
-    element.checked = true;
-  }
-  
+function initialize() {
   // create truthtable related variables
   current.truthtable = [];
   current.satisfyingassignments = Math.pow(2, current.n);
@@ -66,25 +61,19 @@ var colors = {
   }
 
   updateClausesTable();
-  
   createTruthTable(current.n);
-
   updateFormula();
-})();
-
-// Main functions
+}
 
 function clickCell(k, vg, cs) {
-  var help = document.getElementById('help-clause' + k);
-
-  // add/remove from current.instance
+  // add/remove clause from current.instance
   if(current.instance[k][vg][cs] == 0 || current.instance[k][vg][cs] == 2) {
     current.instance[k][vg][cs] = 1;
-    help.innerHTML = getClauseWithLetters(current.clauses[k][vg][cs]) + ' was added';
+    showHint(getClauseWithLetters(current.clauses[k][vg][cs]) + ' was added to the formula');
   }
   else if(current.instance[k][vg][cs] == 1) {
     current.instance[k][vg][cs] = 0;
-    help.innerHTML = getClauseWithLetters(current.clauses[k][vg][cs]) + ' was removed';
+    showHint(getClauseWithLetters(current.clauses[k][vg][cs]) + ' was removed from the formula');
   }
   update();
 }
@@ -96,6 +85,7 @@ function clearClausesAll(k) {
     }
   }
   update();
+  showHint('All ' + k + '-clauses were removed from the formula');
 }
 
 function update() {
@@ -225,17 +215,55 @@ function findImpliedClauses() {
   }
 }
 
-// UI-related functions
+function toggleHints() {
+  current.showHints = !current.showHints;
+  setHintElement();
+}
 
-function togglePopup() {
-  var popup = document.getElementById('popup');
-  if(popup.style.display == 'none') {
-    popup.style.display = '';
+// UI-related functions
+function setUIElements() {
+  addSelectorForN(3, 7);
+
+  setHintElement();
+
+  if(current.showImpliedClauses) {
+    document.getElementById('checkbox-ImpliedClauses').checked = true;
+  }  
+}
+
+function toggleHelp() {
+  var element = document.getElementById('help');
+  var button = document.getElementById('btn-help');
+  
+  if(element.style.display == 'none') {
+    element.style.display = '';
+    button.style.backgroundColor = colors.grey;
   }
   else {
-    popup.style.display = 'none';
+    element.style.display = 'none';
+    button.style.backgroundColor = colors.white;
   }
-  return false;
+}
+
+function setHintElement() {
+  if(current.showHints) {
+    document.getElementById('checkbox-Hints').checked = true;
+    document.getElementById('hint').style.display = 'block';
+  }
+  else {
+    document.getElementById('hint').style.display = 'none';
+  }
+}
+
+function addSelectorForN(minN, maxN) {
+  var element = document.getElementById('select-n');  
+  var html = '';
+  for(var n = minN; n <= maxN; n++) {
+    html += '<option value="' + n + '">n = ' + n + '</option>';
+  }
+  element.innerHTML = html;
+  element.selectedIndex = current.n - minN;
+
 }
 
 function createTruthTable(n) {
@@ -246,8 +274,8 @@ function createTruthTable(n) {
     html += '<tr>';
 
     // add first column (letters and phi)
-    if(row < n) html += '<td class="header">' + letters[row] + '</td>';
-    else html += '<td class="header phi">&phi;</td>';
+    if(row < n) html += '<td class="firstcolumn">' + letters[row] + '</td>';
+    else html += '<td class="firstcolumn phi">&phi;</td>';
 
     // add some extra space between the header and the assignments
     if(row == 0) {
@@ -275,11 +303,7 @@ function createTruthTable(n) {
   }
 
   html += '<tr>';
-  html += '<td colspan="' + (Math.pow(2, current.n) + 2) +
-    '" id="help-assignment" class="help">';
-  html += '</td>';
   html += '</tr>';
-
   html += '</table>';
 
   document.getElementById('truthtable').innerHTML = html;
@@ -311,16 +335,15 @@ function createTruthTable(n) {
 
 function selectionTruthTable(assignment, show) {
   var element;
-  var help = document.getElementById('help-assignment');
   
   // set text
   if(show) {
-    help.innerHTML = getAssignmentWithLetters(assignment) + ' '
+    showHint('The assignment ' + getAssignmentWithLetters(assignment) + ' '
       + (current.truthtable[assignment] == 1 ? 'satisfies' : 'does not satisfy') +
-      ' the formula';
+      ' the formula');
   }
   else {
-    help.innerHTML = '';
+    showHint('');
   }
 
   // set background colors
@@ -423,10 +446,7 @@ function createClausesTable(k, n) {
   }
 
   html += '<tr>';
-  html += '<td colspan="' + (current.combinations[k].length + 1) +
-    ' "id="help-clause' + k + '" class="help"></td>';
   html += '</tr>';
-
   html += '</table>';
 
   document.getElementById('clauses' + k).innerHTML = html;
@@ -444,20 +464,21 @@ function createClausesTable(k, n) {
 
   element = document.getElementById('clear' + k);
   element.addEventListener('click', clearClausesAll.bind(this, k), false);
+  element.addEventListener('mouseover', showHint.bind(this, 'Remove all ' + k + '-clauses from the formula'), false);
+  element.addEventListener('mouseout', showHint.bind(this, ''), false);
 }
 
 function selectionClausesTable(k, vg, cs, show) {
   var cell = document.getElementById('cell-' + k + '-' + vg + '-' + cs);
-  var help = document.getElementById('help-clause' + k);
 
   if(show) {
     cell.style.backgroundColor = colors.black;
 
     if(current.instance[k][vg][cs] == 0 || current.instance[k][vg][cs] == 2) {
-      help.innerHTML = 'add ' + getClauseWithLetters(current.clauses[k][vg][cs]);
+      showHint('add ' + getClauseWithLetters(current.clauses[k][vg][cs]) + ' to the formula')
     }
     else {
-      help.innerHTML = 'remove ' + getClauseWithLetters(current.clauses[k][vg][cs]);
+      showHint('remove ' + getClauseWithLetters(current.clauses[k][vg][cs]) + ' from the formula');
     }    
   }
   else {
@@ -477,7 +498,7 @@ function selectionClausesTable(k, vg, cs, show) {
         }
         break;
     }
-    help.innerHTML = '';
+    showHint('');
   }  
 }
 
@@ -530,6 +551,23 @@ function toggleImpliedClauses() {
   }
 }
 
+function showHint(s) {
+  if(current.showHints) {
+    document.getElementById('hint').innerHTML = s;
+  }
+}
+
+function changeN() {
+  current.n = this.value;
+  initialize();
+}
+
+// Event handlers
+document.getElementById('select-n').addEventListener('change', changeN);
+document.getElementById('btn-help').addEventListener('click', toggleHelp);
+document.getElementById('checkbox-Hints').addEventListener('click', toggleHints);
+document.getElementById('checkbox-ImpliedClauses').addEventListener('click', toggleImpliedClauses);
+
 // Utilities
 // returns an array containing the elements of C(k, n) in colexicographic order
 function getCombinations(k, n) {
@@ -556,6 +594,7 @@ function getCombinations(k, n) {
 }
 
 // source: http://code.stephenmorley.org/articles/hakmem-item-175/
+// (it is used for creating k-combinations over n elements)
 function hakmem175(value) {
   var lowestBit = value & -value;
   var leftBits = value + lowestBit;
@@ -617,11 +656,7 @@ function convertDecimalToBinaryWithPadding(decimal, length) {
 
 // [1, 2, 3] (array) -> "abc" (string)
 function getCombinationWithLetters(combination) {
-  var c = '';
-
-  for(var i = 0; i < combination.length; i++) {
-    c += letters[combination[i] - 1];
-  }
-
-  return c;
+  return combination.map(function(c) {
+    return letters[c - 1];
+  }).join('');
 }

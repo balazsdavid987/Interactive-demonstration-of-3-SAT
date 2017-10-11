@@ -1,9 +1,13 @@
 body {
-  font-family: 'Roboto', sans-serif;
-  font-size: 16px;
   color: #1D1D1D;
   background-color: #FFFFFF;
-  margin: 5px;
+  margin: 0 0 75px 0;
+  overflow-y: scroll;
+}
+
+body, select, button {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
 }
 
 ::-moz-selection {
@@ -17,6 +21,7 @@ body {
 h1, h2 {
   display: inline;
   font-weight: normal;
+  margin: 0;
 }
 
 h1 {
@@ -40,9 +45,8 @@ a:visited {
   text-decoration: none;
 }
 
-#main {
+#container {
   width: 900px;
-  height: 600px;
   margin: auto;
 }
 
@@ -52,37 +56,13 @@ hr {
   height: 1px;
 }
 
-#popup {
-  position: relative;
-  margin: 85px auto;
-  height: 325px;
-  width: 600px;
-  border: 2px solid black;
-  background-color: #FFFFFF;
-  padding: 25px;
-  box-shadow: 0 0 16px 0 rgba(0,0,0,0.05);
-}
-
-#leftside {
-  float: left;
-  margin-right: 25px;
-  width: 500px;
-}
-
-#rightside {
-  float: right;
-  width: 375px;
-}
-
-div.right {
-  float: right;
-  margin-top: 5px;
-}
-
 #formula {
-  min-height: 225px;
   line-height: 28px;
-  margin-bottom: 17px;
+  font-size: 16px;
+}
+
+#truthtable {
+  margin-bottom: 15px;
 }
 
 table {
@@ -93,7 +73,7 @@ td {
   font-size: 15px;
 }
 
-#truthtable td.header {
+#truthtable td.firstcolumn {
   border-right: 1px solid #7D7D7D;
   padding: 6px 4px;
   width: 15px;
@@ -108,16 +88,12 @@ td {
   border-top: 2px solid #7D7D7D;
 }
 
-td.help {
-  height: 24px;
-  text-align: center;
-  padding: 10px 0 !important;
-  border-width: 0 !important;
-  font-size: 16px !important;
+table.clauses {
+  margin: 15px 0;
 }
-
 table.clauses td {
-  width: 30px;
+  width: 32px;
+  box-sizing: border-box;
   text-align: center;
   border: 1px solid #969696;
   cursor: default;
@@ -126,4 +102,83 @@ table.clauses td {
 table.clauses td.clause,
 table.clauses td.clear {
   cursor: pointer;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#hint {
+  display: none;
+  width: 900px;
+  height: 50px;  
+  position: fixed;
+  bottom: 0px;
+  line-height: 50px;
+  background-color: #e2e2e2;
+  border-top: 1px solid #969696;
+  padding-left: 20px;
+  box-sizing: border-box;  
+}
+
+#select-n {
+  padding: 0 5px;
+}
+
+button {
+  padding: 5px 10px;
+  width: 100px;
+  border: 1px solid #969696;
+  background-color: white;
+  outline: none;
+}
+
+button:hover {
+  background-color: #D7D7D7;
+}
+
+#top {
+  margin: 15px 0;
+}
+
+#main {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+#clauses {
+  flex-shrink: 0;
+}
+
+@media (width: 550px) {
+  #container, #hint {
+    width: 550px;
+  }
+  #top {
+    margin: 25px;
+  }
+  #help, #main {
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+  button {
+    font-size: 20px;
+  }
+  #help, #formula {
+    font-size: 14px;
+  }
+  h1 {
+    width: 100%;
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  table.clauses td {
+    width: 46px;
+    height: 24px;
+  }
 }
